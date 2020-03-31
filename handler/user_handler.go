@@ -12,9 +12,15 @@ func SignUpHandler(c *gin.Context){
 }
 
 func LoginHandler(c *gin.Context){
-	result := tool.Login(c.PostForm("Email"), c.PostForm("Password"))
+	var loginParam struct{
+		Email 		string	`json:"Email"`
+		Password 	string	`json:"Password"`
+	}
+	tool.CheckError(c.Bind(&loginParam), "登录数据有误")
+	result := tool.Login(loginParam.Email, loginParam.Password)
 	if result.Id == ""{
 		c.JSON(http.StatusBadRequest, nil)
+	}else{
+		c.JSON(http.StatusOK, result)
 	}
-	c.JSON(http.StatusOK, result)
 }
