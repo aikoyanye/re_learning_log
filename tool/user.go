@@ -28,5 +28,6 @@ func Login(email, password string) User {
 		return result
 	}
 	CheckError(rows.Scan(&result.Id, &result.Username), "生成User错误")
+	defer rows.Close()
 	return result
 }
