@@ -7,11 +7,13 @@ import (
 	"time"
 )
 
-func CheckError(err error, str string){
+func CheckError(err error, str string) bool {
 	if err != nil{
 		fmt.Println(str)
 		fmt.Println(err)
+		return false
 	}
+	return true
 }
 
 func md5V(str string) string  {

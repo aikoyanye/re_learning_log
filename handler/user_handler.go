@@ -12,7 +12,9 @@ func SignUpHandler(c *gin.Context) {
 		Password string `json:"Password"`
 		Username string `json:"Username"`
 	}
-	tool.CheckError(c.Bind(&signupParam), "注册数据有误")
+	if !tool.CheckError(c.Bind(&signupParam), "注册数据有误"){
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "注册失败"})
+	}
 	tool.SignUp(signupParam.Username, signupParam.Password, signupParam.Email)
 	c.JSON(http.StatusOK, nil)
 }
@@ -22,7 +24,9 @@ func LoginHandler(c *gin.Context) {
 		Email    string `json:"Email"`
 		Password string `json:"Password"`
 	}
-	tool.CheckError(c.Bind(&loginParam), "登录数据有误")
+	if !tool.CheckError(c.Bind(&loginParam), "登录数据有误"){
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "登录失败"})
+	}
 	result := tool.Login(loginParam.Email, loginParam.Password)
 	if result.Id == "" {
 		c.JSON(http.StatusBadRequest, nil)

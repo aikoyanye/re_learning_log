@@ -9,11 +9,14 @@ import (
 // 检查登录状态是否过期
 func CheckLoginStatus() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		username, err := c.Request.Cookie("Username")
-		tool.CheckError(err, "中间件：获取Cookie失败")
-		if len(username.Value) <= 9 {
-			c.JSON(http.StatusForbidden, gin.H{"msg": "登录状态失效"})
-		} else {
+		if c.Request.URL.Path != "/user/login"{
+			username, err := c.Request.Cookie("Username")
+			if !tool.CheckError(err, "中间件：获取Cookie失败") {
+				c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"msg": "登录状态失效"})
+			}
+			if len(username.Value) <= 0{
+				c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"msg": "登录状态失效"})
+			}
 			c.Next()
 		}
 	}

@@ -14,6 +14,9 @@ func main() {
 	router.POST("/user/signup", handler.SignUpHandler)
 	router.POST("/user/login", handler.LoginHandler)
 	router.POST("/user/logout", handler.LogoutHandler)
+	router.POST("/home", handler.HomeHandler)
+	router.POST("/home/notice", handler.AddNoticeHandler)
+	router.POST("/home/ulist", handler.AddUListHandler)
 
 	tool.CheckError(router.Run(":8001"), "开启服务失败")
 }

@@ -2,10 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="116b18f9-8535-45d9-a708-8e3b0189b5a1" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/handler/mid_handler.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/handler/home_handler.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tool/home.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/handler/mid_handler.go" beforeDir="false" afterPath="$PROJECT_DIR$/handler/mid_handler.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/handler/user_handler.go" beforeDir="false" afterPath="$PROJECT_DIR$/handler/user_handler.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/log.db" beforeDir="false" afterPath="$PROJECT_DIR$/log.db" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tool/tool.go" beforeDir="false" afterPath="$PROJECT_DIR$/tool/tool.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tool/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/tool/user.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -49,6 +54,7 @@
   <component name="PropertiesComponent">
     <property name="DefaultGoTemplateProperty" value="Go File" />
     <property name="DefaultHtmlFileTemplate" value="HTML4 File" />
+    <property name="GO_FMT" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="go.import.settings.migrated" value="true" />
@@ -105,5 +111,9 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="4.2" />
+    <option name="LAST_COMMIT_MESSAGE" value="4.2" />
   </component>
 </project>
