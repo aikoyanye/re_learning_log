@@ -35,5 +35,6 @@ func AddUListHandler(c *gin.Context){
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "添加更新公布错误"})
 	}
 	tool.PostUList(ulist.Version, ulist.Content)
-	c.JSON(http.StatusOK, nil)
+	result := tool.GetUpdateList()
+	c.JSON(http.StatusOK, gin.H{"ulist": result})
 }

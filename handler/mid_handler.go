@@ -9,7 +9,11 @@ import (
 // 检查登录状态是否过期
 func CheckLoginStatus() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		if c.Request.URL.Path != "/user/login"{
+		// 敏感操作才需要判断登录状态
+		blackList := map[string]bool{
+			"/user/logout": true,
+		}
+		if blackList[c.Request.URL.Path]{
 			username, err := c.Request.Cookie("Username")
 			if !tool.CheckError(err, "中间件：获取Cookie失败") {
 				c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"msg": "登录状态失效"})
