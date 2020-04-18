@@ -21,7 +21,7 @@ func SignUp(username, password, email string){
 
 func Login(email, password string) User {
 	password = md5V(password)
-	sql := "SELECT id, username FROM user WHERE email = ? AND password = ?"
+	sql := "SELECT id, username, type FROM user WHERE email = ? AND password = ?"
 	stmt, err := DBObject.Prepare(sql)
 	CheckError(err, "用户登录的SQL语句可能出现错误")
 	rows, err := stmt.Query(email, password)
@@ -30,8 +30,19 @@ func Login(email, password string) User {
 	if !rows.Next(){
 		return result
 	}
-	CheckError(rows.Scan(&result.Id, &result.Username), "生成User错误")
+	CheckError(rows.Scan(&result.Id, &result.Username, &result.Type), "生成User错误")
 	defer rows.Close()
 	defer stmt.Close()
 	return result
+}
+
+func ChangeUserInfo(id, username, oPass, nPass string) int64 {
+	sql := "UPDATE user SET username = ?, password = ? WHERE id = ? AND Password = ?"
+	stmt, err := DBObject.Prepare(sql)
+	CheckError(err, "修改用户数据的SQL语句可能出现错误")
+	result, err := stmt.Exec(username, md5V(nPass), id, md5V(oPass))
+	CheckError(err, "修改用户数据的SQL语句可能出现错误")
+	ra, _ :=result.RowsAffected()
+	defer stmt.Close()
+	return ra
 }

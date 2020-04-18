@@ -63,3 +63,11 @@ func PostUList(version, content string){
 	CheckError(err, "添加update_list错误")
 	defer stmt.Close()
 }
+
+func AddBanIp(ip string){
+	sql := "INSERT INTO ban_ip (ip) VALUES (?)"
+	stmt, err := DBObject.Prepare(sql)
+	CheckError(err, "添加ban ip语句错误")
+	stmt.Exec(ip)
+	defer stmt.Close()
+}

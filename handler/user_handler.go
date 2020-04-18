@@ -33,6 +33,7 @@ func LoginHandler(c *gin.Context) {
 	} else {
 		c.SetCookie("Username", result.Username, 86400, "/", "127.0.0.1", false, false)
 		c.SetCookie("Id", result.Id, 86400, "/", "127.0.0.1", false, false)
+		c.SetCookie("Type", result.Type, 86400, "/", "127.0.0.1", false, false)
 		c.JSON(http.StatusOK, result)
 	}
 }
@@ -41,4 +42,22 @@ func LogoutHandler(c *gin.Context) {
 	c.SetCookie("Username", "", 86400, "/", "127.0.0.1", false, false)
 	c.SetCookie("Id", "", 86400, "/", "127.0.0.1", false, false)
 	c.JSON(http.StatusOK, nil)
+}
+
+func ChangeUserInfoHJandler(c *gin.Context){
+	var userInfoParam struct {
+		Id    string `json:"Id"`
+		Username string `json:"Username"`
+		OPassword string `json:"OPassword"`
+		NPassword string `json:"NPassword"`
+	}
+	if !tool.CheckError(c.Bind(&userInfoParam), "修改用户信息数据有误"){
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "修改信息失败"})
+	}
+	if tool.ChangeUserInfo(userInfoParam.Id, userInfoParam.Username, userInfoParam.OPassword, userInfoParam.NPassword) >= 1{
+		c.SetCookie("Username", userInfoParam.Username, 86400, "/", "127.0.0.1", false, false)
+		c.JSON(http.StatusOK, nil)
+	}else{
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "修改信息失败，可能是旧密码输入错误"})
+	}
 }
