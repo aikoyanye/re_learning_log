@@ -10,6 +10,8 @@ func main() {
 	router := gin.Default()
 	router.Use(handler.Cors())
 	router.Use(handler.CheckLoginStatus())
+	router.Use(handler.ColReIp())
+	router.Use(handler.BanIp())
 	router.Static("/resource", "./static")
 	router.POST("/user/signup", handler.SignUpHandler)
 	router.POST("/user/login", handler.LoginHandler)

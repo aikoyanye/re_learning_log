@@ -71,3 +71,28 @@ func AddBanIp(ip string){
 	stmt.Exec(ip)
 	defer stmt.Close()
 }
+
+func AddReIp(ip string){
+	sql := "INSERT INTO re_ip (ip, created) VALUES (?, ?)"
+	stmt, err := DBObject.Prepare(sql)
+	CheckError(err, "添加re ip语句错误")
+	stmt.Exec(ip, Now())
+	defer stmt.Close()
+}
+
+func AllBanIp() []string {
+	sql := "SELECT ip FROM ban_ip"
+	stmt, err := DBObject.Prepare(sql)
+	CheckError(err, "获取更新列表SQL语句错误")
+	rows, err := stmt.Query()
+	CheckError(err, "获取更新列表SQL语句错误")
+	results := []string{}
+	for rows.Next(){
+		result := ""
+		CheckError(rows.Scan(&result), "生成re ip失败")
+		results = append(results, result)
+	}
+	defer rows.Close()
+	defer stmt.Close()
+	return results
+}

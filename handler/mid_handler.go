@@ -4,6 +4,7 @@ import (
 	"../tool"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strings"
 )
 
 // 检查登录状态是否过期
@@ -12,6 +13,11 @@ func CheckLoginStatus() gin.HandlerFunc {
 		// 敏感操作才需要判断登录状态
 		blackList := map[string]bool{
 			"/user/logout": true,
+			"/user/changeInfo": true,
+			"/home/notice": true,
+			"/home/ulist": true,
+			"/home/bg": true,
+			"/banip": true,
 		}
 		if blackList[c.Request.URL.Path]{
 			username, err := c.Request.Cookie("Username")
@@ -37,6 +43,28 @@ func Cors() gin.HandlerFunc {
 		c.Header("Access-Control-Allow-Credentials", "true")
 		if method == "OPTIONS" {
 			c.AbortWithStatus(http.StatusNoContent)
+		}
+		c.Next()
+	}
+}
+
+// 收集访问IP
+func ColReIp() gin.HandlerFunc{
+	return func(c *gin.Context) {
+		tool.AddReIp(c.ClientIP())
+		c.Next()
+	}
+}
+
+// 指定ip无法访问
+func BanIp() gin.HandlerFunc{
+	return func(c *gin.Context) {
+		ips := tool.AllBanIp()
+		clientIp := c.ClientIP()
+		for _, ip := range ips{
+			if strings.Contains(clientIp, ip){
+				c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"msg": "bye"})
+			}
 		}
 		c.Next()
 	}
