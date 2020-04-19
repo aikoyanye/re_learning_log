@@ -69,6 +69,7 @@ func AddBanIp(ip string){
 	stmt, err := DBObject.Prepare(sql)
 	CheckError(err, "添加ban ip语句错误")
 	stmt.Exec(ip)
+	BanIps = append(BanIps, ip)
 	defer stmt.Close()
 }
 

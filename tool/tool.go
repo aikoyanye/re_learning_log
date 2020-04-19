@@ -7,6 +7,8 @@ import (
 	"time"
 )
 
+var BanIps = []string{}
+
 func CheckError(err error, str string) bool {
 	if err != nil{
 		fmt.Println(str)
@@ -24,4 +26,8 @@ func md5V(str string) string  {
 
 func Now() string {
 	return time.Now().Format("2006-01-02 15:04:05")
+}
+
+func SetBanIps(){
+	BanIps = AllBanIp()
 }

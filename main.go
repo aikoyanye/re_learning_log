@@ -22,5 +22,8 @@ func main() {
 	router.POST("/home/ulist", handler.AddUListHandler)
 	router.POST("/home/bg", handler.UploadBgImgHandler)
 	router.POST("/banip", handler.AddBanIpHandler)
+
+	tool.SetBanIps()
+
 	tool.CheckError(router.Run(":8001"), "开启服务失败")
 }

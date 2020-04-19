@@ -59,9 +59,8 @@ func ColReIp() gin.HandlerFunc{
 // 指定ip无法访问
 func BanIp() gin.HandlerFunc{
 	return func(c *gin.Context) {
-		ips := tool.AllBanIp()
 		clientIp := c.ClientIP()
-		for _, ip := range ips{
+		for _, ip := range tool.BanIps{
 			if strings.Contains(clientIp, ip){
 				c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"msg": "bye"})
 			}
