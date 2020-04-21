@@ -1,15 +1,25 @@
 package tool
 
+import "fmt"
+
 type Title struct {
 	Id 			string
 	Title 		string
 	UserId 		string
+	Username	string
 	Created 	string
 	Hidden 		string
 }
 
-func AllTitle() []Title {
-	sql := "SELECT * FROM title"
+func AllTitle(id string) []Title {
+	sql := ""
+	if id == ""{
+		sql = "SELECT * FROM title WHERE hidden = \"0\""
+	}else{
+		sql = "SELECT * FROM title WHERE userId = \"" + id + "\""
+	}
+	fmt.Println(id)
+	fmt.Println(sql)
 	stmt, err := DBObject.Prepare(sql)
 	CheckError(err, "查找Title错误")
 	rows, err := stmt.Query()

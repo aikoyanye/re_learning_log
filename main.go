@@ -22,6 +22,7 @@ func main() {
 	router.POST("/home/ulist", handler.AddUListHandler)
 	router.POST("/home/bg", handler.UploadBgImgHandler)
 	router.POST("/banip", handler.AddBanIpHandler)
+	router.POST("/title", handler.AllTitleHandler)
 
 	tool.SetBanIps()
 
