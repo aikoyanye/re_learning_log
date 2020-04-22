@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="116b18f9-8535-45d9-a708-8e3b0189b5a1" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/handler/title_handler.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/handler/content_handler.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tool/content.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/handler/title_handler.go" beforeDir="false" afterPath="$PROJECT_DIR$/handler/title_handler.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/log.db" beforeDir="false" afterPath="$PROJECT_DIR$/log.db" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tool/title.go" beforeDir="false" afterPath="$PROJECT_DIR$/tool/title.go" afterDir="false" />
