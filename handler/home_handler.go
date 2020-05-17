@@ -9,9 +9,6 @@ import (
 func HomeHandler(c *gin.Context){
 	notice := tool.GetReleaseNotice()
 	ulist := tool.GetUpdateList()
-	if notice.Content == "" || len(ulist) == 0{
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "获取主页信息失败"})
-	}
 	c.JSON(http.StatusOK, gin.H{"Notice": notice, "UList": ulist})
 }
 
