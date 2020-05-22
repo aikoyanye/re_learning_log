@@ -8,8 +8,9 @@ import (
 
 func AllContentHandler(c *gin.Context){
 	var info struct{
-		UserId string `json:"UserId"`
-		TitleId string `json:"TitleId"`
+		UserId 		string `json:"UserId"`
+		TitleId 	string `json:"TitleId"`
+		ContentId 	string `json:"ContentId"`
 	}
 	if !tool.CheckError(c.Bind(&info), "获取AllContent错误"){
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "获取AllContent错误"})
@@ -24,7 +25,9 @@ func GetContentHandler(c *gin.Context){
 	if !tool.CheckError(c.Bind(&content), "获取Content错误"){
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "获取文章错误"})
 	}
-	c.JSON(http.StatusOK, tool.GetContentById(content.ContentId))
+
+	c.JSON(http.StatusOK, gin.H{"content": tool.GetContentById(content.ContentId),
+							"comments": tool.AllCommentByCId(content.ContentId)})
 }
 
 func EditContentHandler(c *gin.Context){

@@ -27,6 +27,7 @@ func main() {
 	router.POST("/content", handler.GetContentHandler)
 	router.POST("/content/edit", handler.EditContentHandler)
 	router.POST("/content/del", handler.DelContentHandler)
+	router.POST("/comment/add", handler.AddCommentHandler)
 
 	tool.SetBanIps()
 
