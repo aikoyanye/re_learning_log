@@ -28,6 +28,11 @@ func main() {
 	router.POST("/content/edit", handler.EditContentHandler)
 	router.POST("/content/del", handler.DelContentHandler)
 	router.POST("/comment/add", handler.AddCommentHandler)
+	router.POST("/title/Alltitles", handler.AllTitleWhenAddContentHandler)
+	router.POST("/title/add", handler.AddTitleHandler)
+	router.POST("/content/add", handler.AddContent)
+	router.POST("/title/edit", handler.EditTitleHandler)
+	router.POST("/title/del", handler.DelTitleHandler)
 
 	tool.SetBanIps()
 

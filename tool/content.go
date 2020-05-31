@@ -1,5 +1,7 @@
 package tool
 
+import "strconv"
+
 type Content struct {
 	Id 			string
 	Content 	string
@@ -9,6 +11,7 @@ type Content struct {
 	Created 	string
 	Hidden 		string
 	Username	string
+	UserId 		string
 }
 
 func AllContent(titleId, userId string) []Content {
@@ -36,7 +39,7 @@ func AllContent(titleId, userId string) []Content {
 }
 
 func GetContentById(id string) Content {
-	sql := "SELECT c.content, u.username, c.created, t.title, t.id FROM content c, title t, user u " +
+	sql := "SELECT c.content, u.username, c.created, t.title, t.id, u.id, c.head FROM content c, title t, user u " +
 		"WHERE c.id = ? AND u.id = t.userId AND c.titleId = t.id"
 	stmt, err := DBObject.Prepare(sql)
 	CheckError(err, "获取content 错误")
@@ -44,7 +47,8 @@ func GetContentById(id string) Content {
 	CheckError(err, "获取content 错误")
 	result := Content{}
 	if rows.Next(){
-		CheckError(rows.Scan(&result.Content, &result.Username, &result.Created, &result.TitleName, &result.TitleId), "获取content 错误")
+		CheckError(rows.Scan(&result.Content, &result.Username, &result.Created,
+			&result.TitleName, &result.TitleId, &result.UserId, &result.Head), "获取content 错误")
 	}else{
 		result.Content = "文章获取失败，可能是服务器宕机了"
 	}
@@ -53,13 +57,13 @@ func GetContentById(id string) Content {
 	return result
 }
 
-func EditContentById(id, content string) Content {
-	sql := "UPDATE content SET content = ?, created = ? WHERE id = ?"
+func EditContentById(id, content, head string) Content {
+	sql := "UPDATE content SET content = ?, created = ?, head = ? WHERE id = ?"
 	stmt, err := DBObject.Prepare(sql)
 	CheckError(err, "更新文章失败")
 	result := Content{}
 	result.Created = Now()
-	_, err = stmt.Exec(content, result.Created, id)
+	_, err = stmt.Exec(content, result.Created, head, id)
 	CheckError(err, "更新文章失败")
 	defer stmt.Close()
 	return result
@@ -77,4 +81,18 @@ func DelContentById(id string) bool {
 		return true
 	}
 	return false
+}
+
+func AddContent(head, content, titleId, hidden string) string {
+	sql := "INSERT INTO content (content, head, titleId, created, hidden) VALUES (?, ?, ?, ?, ?)"
+	stmt, err := DBObject.Prepare(sql)
+	CheckError(err, "添加文章失败")
+	re, err := stmt.Exec(content, head, titleId, Now(), hidden)
+	CheckError(err, "添加文章失败")
+	defer stmt.Close()
+	result, err := re.LastInsertId()
+	if err == nil{
+		return strconv.FormatInt(result, 10)
+	}
+	return "-1"
 }
