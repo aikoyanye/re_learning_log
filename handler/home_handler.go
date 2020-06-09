@@ -40,9 +40,11 @@ func UploadBgImgHandler(c *gin.Context){
 	file, err := c.FormFile("BgImg")
 	if tool.CheckError(err, "上传首页png出错"){
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "更换首页图片失败"})
+		return
 	}
 	if tool.CheckError(c.SaveUploadedFile(file, "static/bg.png"), "保存首页png出错"){
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "更换首页图片失败"})
+		return
 	}
 	c.JSON(http.StatusOK, nil)
 }

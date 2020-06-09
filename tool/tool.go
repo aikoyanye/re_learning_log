@@ -28,6 +28,10 @@ func Now() string {
 	return time.Now().Format("2006-01-02 15:04:05")
 }
 
+func Now_() string {
+	return time.Now().Format("2006_01_02_15_04_05")
+}
+
 func SetBanIps(){
 	BanIps = AllBanIp()
 }

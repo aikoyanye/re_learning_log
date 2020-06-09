@@ -33,6 +33,7 @@ func main() {
 	router.POST("/content/add", handler.AddContent)
 	router.POST("/title/edit", handler.EditTitleHandler)
 	router.POST("/title/del", handler.DelTitleHandler)
+	router.POST("/content/uploadPic", handler.UploadContentPicHandler)
 
 	tool.SetBanIps()
 

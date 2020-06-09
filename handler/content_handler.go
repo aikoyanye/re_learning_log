@@ -77,3 +77,18 @@ func AddContent(c *gin.Context){
 		c.JSON(http.StatusBadRequest, gin.H{"msg": "添加文章出错"})
 	}
 }
+
+func UploadContentPicHandler(c *gin.Context){
+	file, err := c.FormFile("File")
+	username := c.PostForm("Username")
+	if !tool.CheckError(err, "上传content pic出错_"){
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "上传图片失败_"})
+		return
+	}
+	pic := "ContentPic/" + username + "_" + tool.Now_() + ".png"
+	if !tool.CheckError(c.SaveUploadedFile(file, "static/" + pic), "上传content pic出错"){
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "上传图片失败"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"pic": "http://127.0.0.1:8001/resource/" + pic})
+}
