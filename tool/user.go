@@ -1,5 +1,7 @@
 package tool
 
+import "strconv"
+
 type User struct {
 	Id 			string
 	Email 		string
@@ -13,10 +15,12 @@ func SignUp(username, password, email string){
 	password = md5V(password)
 	sql := "INSERT INTO user (email, username, password, type, created) VALUES (?, ?, ?, ?, ?)"
 	stmt, err := DBObject.Prepare(sql)
-	CheckError(err, "注册用户的SQL语句可能出现错误")
-	_, err = stmt.Exec(email, username, password, "normal", Now())
-	CheckError(err, "注册用户过程发生错误")
 	defer stmt.Close()
+	CheckError(err, "注册用户的SQL语句可能出现错误")
+	re, err := stmt.Exec(email, username, password, "normal", Now())
+	id, _ := re.LastInsertId()
+	CheckError(err, "注册用户过程发生错误")
+	CreateDir("./static/Pan/" + strconv.FormatInt(id,10))
 }
 
 func Login(email, password string) User {

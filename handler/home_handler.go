@@ -55,7 +55,25 @@ func AddBanIpHandler(c *gin.Context){
 	}
 	if !tool.CheckError(c.Bind(&banIp), "添加ban ip错误"){
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "添加ban ip错误"})
+		return
 	}
 	tool.AddBanIp(banIp.BanIp)
 	c.JSON(http.StatusOK, nil)
+}
+
+// Pan Handler
+func PanHandler(c *gin.Context){
+	var currentDir struct{
+		CurrentDir string `json:"CurrentDir"`
+	}
+	if !tool.CheckError(c.Bind(&currentDir), "网盘id错误"){
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "网盘id错误"})
+		return
+	}
+	results := tool.PathDirFileList("./static/Pan/" + currentDir.CurrentDir)
+	if results == nil{
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "网盘id错误"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"files": results})
 }

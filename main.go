@@ -13,6 +13,7 @@ func main() {
 	router.Use(handler.ColReIp())
 	router.Use(handler.BanIp())
 	router.Static("/resource", "./static")
+	router.Static("/pan", "./static/Pan")
 	router.POST("/user/signup", handler.SignUpHandler)
 	router.POST("/user/login", handler.LoginHandler)
 	router.POST("/user/logout", handler.LogoutHandler)
@@ -34,6 +35,7 @@ func main() {
 	router.POST("/title/edit", handler.EditTitleHandler)
 	router.POST("/title/del", handler.DelTitleHandler)
 	router.POST("/content/uploadPic", handler.UploadContentPicHandler)
+	router.POST("/pan", handler.PanHandler)
 
 	tool.SetBanIps()
 
