@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -43,30 +44,13 @@ func SetBanIps(){
 	BanIps = AllBanIp()
 }
 
-// 判断文件夹是否存在
-// true：存在
-// false：不存在
-func DirExist(path string) bool {
-	_, err := os.Stat(path)
-	if !CheckError(err, "文件夹访问失败"){
-		return true
-	}
-	if os.IsNotExist(err){
-		return false
-	}
-	return false
-}
-
 // 创建文件夹
 // true：创建成功
 // false：创建失败
 func CreateDir(path string) bool {
-	if DirExist(path){
-		fmt.Println("创建文件夹失败：文件夹已存在")
-		return false
-	}
+	path = strings.Replace(path, "//", "/", -1)
 	err := os.Mkdir(path, os.ModePerm)
-	if !CheckError(err, "创建文件夹失败"){
+	if !CheckError(err, "创建文件夹失败，文件夹已存在"){
 		return false
 	}
 	return true
@@ -81,7 +65,7 @@ type F struct{
 // 获取指定文件夹下的所有文件
 // results：文件列表
 func PathDirFileList(path string) []F {
-
+	path = strings.Replace(path, "//", "/", -1)
 	results := []F{}
 	files, err := ioutil.ReadDir(path)
 	if !CheckError(err, "获取" + path + "目录失败"){

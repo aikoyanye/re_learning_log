@@ -16,16 +16,18 @@ func CheckLoginStatus() gin.HandlerFunc {
 			"/user/changeInfo": true,
 			"/home/notice": true,
 			"/home/ulist": true,
-			"/home/bg": true,
 			"/banip": true,
+			"/home": true,
 		}
 		if blackList[c.Request.URL.Path]{
 			username, err := c.Request.Cookie("Username")
 			if !tool.CheckError(err, "中间件：获取Cookie失败") {
 				c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"msg": "登录状态失效"})
+				return
 			}
 			if len(username.Value) <= 0{
 				c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"msg": "登录状态失效"})
+				return
 			}
 			c.Next()
 		}

@@ -38,11 +38,11 @@ func AddUListHandler(c *gin.Context){
 
 func UploadBgImgHandler(c *gin.Context){
 	file, err := c.FormFile("BgImg")
-	if tool.CheckError(err, "上传首页png出错"){
+	if !tool.CheckError(err, "上传首页png出错"){
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "更换首页图片失败"})
 		return
 	}
-	if tool.CheckError(c.SaveUploadedFile(file, "static/bg.png"), "保存首页png出错"){
+	if !tool.CheckError(c.SaveUploadedFile(file, "static/bg.png"), "保存首页png出错"){
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "更换首页图片失败"})
 		return
 	}
@@ -61,7 +61,8 @@ func AddBanIpHandler(c *gin.Context){
 	c.JSON(http.StatusOK, nil)
 }
 
-// Pan Handler
+// 假盘
+// 返回指定文件夹的文件目录
 func PanHandler(c *gin.Context){
 	var currentDir struct{
 		CurrentDir string `json:"CurrentDir"`
@@ -76,4 +77,50 @@ func PanHandler(c *gin.Context){
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"files": results})
+}
+
+// 假盘
+// 指定目录和文件夹名，新建一个文件夹
+func CreateDirPanHandler(c *gin.Context){
+	var currentDir struct{
+		CurrentDir string `json:"CurrentDir"`
+		CreateDir string `json:"CreateDir"`
+	}
+	if !tool.CheckError(c.Bind(&currentDir), "创建文件夹错误"){
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "创建文件夹错误"})
+		return
+	}
+	if tool.CreateDir("./static/Pan/" + currentDir.CurrentDir + "/" + currentDir.CreateDir){
+		results := tool.PathDirFileList("./static/Pan/" + currentDir.CurrentDir)
+		if results == nil{
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "创建文件夹失败"})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{"files": results})
+	}else{
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "创建文件夹错误"})
+		return
+	}
+}
+
+// 假盘
+// 上传文件
+func PanUploadFileHandler(c *gin.Context){
+	file, err := c.FormFile("File")
+	if !tool.CheckError(err, "上传文件出错"){
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "上传文件出错"})
+		return
+	}
+	var currentDir struct{
+		CurrentDir string `json:"CurrentDir"`
+	}
+	if !tool.CheckError(c.Bind(&currentDir), "上传文件出错_"){
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "上传文件出错_"})
+		return
+	}
+	if !tool.CheckError(c.SaveUploadedFile(file, "./static/Pan/" + currentDir.CurrentDir + file.Filename), "保存首页png出错"){
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "更换首页图片失败"})
+		return
+	}
+	c.JSON(http.StatusOK, nil)
 }
