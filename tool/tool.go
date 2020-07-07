@@ -84,3 +84,16 @@ func PathDirFileList(path string) []F {
 	}
 	return results
 }
+
+// 删除文件夹
+// path：目录
+// files：目录下的文件或文件夹
+func DeleteSelection(path string, files []string) bool {
+	for _, value := range files{
+		str := strings.ReplaceAll(path + "/" + value, "//", "/")
+		if !CheckError(os.RemoveAll("./static/Pan/" + str), "删除文件Or文件夹失败"){
+			return false
+		}
+	}
+	return true
+}

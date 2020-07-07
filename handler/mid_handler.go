@@ -17,7 +17,6 @@ func CheckLoginStatus() gin.HandlerFunc {
 			"/home/notice": true,
 			"/home/ulist": true,
 			"/banip": true,
-			"/home": true,
 		}
 		if blackList[c.Request.URL.Path]{
 			username, err := c.Request.Cookie("Username")

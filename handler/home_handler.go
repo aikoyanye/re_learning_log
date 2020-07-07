@@ -118,9 +118,32 @@ func PanUploadFileHandler(c *gin.Context){
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "上传文件出错_"})
 		return
 	}
-	if !tool.CheckError(c.SaveUploadedFile(file, "./static/Pan/" + currentDir.CurrentDir + file.Filename), "保存首页png出错"){
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "更换首页图片失败"})
+	if !tool.CheckError(c.SaveUploadedFile(file, "./static/Pan/" + currentDir.CurrentDir + file.Filename), "上传文件出错_"){
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "上传文件出错_"})
 		return
 	}
 	c.JSON(http.StatusOK, nil)
+}
+
+//假盘
+// 删除选中文件or文件夹
+func DeleteSelectionHandler(c *gin.Context){
+	var currentDir struct{
+		CurrentDir string `json:"CurrentDir"`
+		Selection []string `json:"Selection"`
+	}
+	if !tool.CheckError(c.Bind(&currentDir), "删除文件Or文件夹出错"){
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "删除文件Or文件夹出错"})
+		return
+	}
+	if !tool.DeleteSelection(currentDir.CurrentDir, currentDir.Selection){
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "删除文件Or文件夹出错"})
+		return
+	}
+	results := tool.PathDirFileList("./static/Pan/" + currentDir.CurrentDir)
+	if results == nil{
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "删除文件Or文件夹出错"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"files": results})
 }

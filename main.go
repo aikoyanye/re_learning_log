@@ -38,6 +38,7 @@ func main() {
 	router.POST("/pan", handler.PanHandler)
 	router.POST("/pan/createDir", handler.CreateDirPanHandler)
 	router.POST("/pan/upload", handler.PanUploadFileHandler)
+	router.POST("/pan/delete", handler.DeleteSelectionHandler)
 
 	tool.SetBanIps()
 
