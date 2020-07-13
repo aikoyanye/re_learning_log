@@ -14,8 +14,12 @@ func SignUpHandler(c *gin.Context) {
 	}
 	if !tool.CheckError(c.Bind(&signupParam), "注册数据有误"){
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "注册失败"})
+		return
 	}
-	tool.SignUp(signupParam.Username, signupParam.Password, signupParam.Email)
+	if !tool.SignUp(signupParam.Username, signupParam.Password, signupParam.Email){
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "注册失败"})
+		return
+	}
 	c.JSON(http.StatusOK, nil)
 }
 
@@ -26,21 +30,26 @@ func LoginHandler(c *gin.Context) {
 	}
 	if !tool.CheckError(c.Bind(&loginParam), "登录数据有误"){
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "登录失败"})
+		return
 	}
-	result := tool.Login(loginParam.Email, loginParam.Password)
+	err, result := tool.Login(loginParam.Email, loginParam.Password)
+	if !err{
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "登录失败"})
+		return
+	}
 	if result.Id == "" {
 		c.JSON(http.StatusBadRequest, nil)
 	} else {
-		c.SetCookie("Username", result.Username, 86400, "/", "127.0.0.1", false, false)
-		c.SetCookie("Id", result.Id, 86400, "/", "127.0.0.1", false, false)
-		c.SetCookie("Type", result.Type, 86400, "/", "127.0.0.1", false, false)
+		c.SetCookie("Username", result.Username, 86400, "/", "120.77.153.248", false, false)
+		c.SetCookie("Id", result.Id, 86400, "/", "120.77.153.248", false, false)
+		c.SetCookie("Type", result.Type, 86400, "/", "120.77.153.248", false, false)
 		c.JSON(http.StatusOK, result)
 	}
 }
 
 func LogoutHandler(c *gin.Context) {
-	c.SetCookie("Username", "", 86400, "/", "127.0.0.1", false, false)
-	c.SetCookie("Id", "", 86400, "/", "127.0.0.1", false, false)
+	c.SetCookie("Username", "", 86400, "/", "120.77.153.248", false, false)
+	c.SetCookie("Id", "", 86400, "/", "120.77.153.248", false, false)
 	c.JSON(http.StatusOK, nil)
 }
 
@@ -53,11 +62,18 @@ func ChangeUserInfoHJandler(c *gin.Context){
 	}
 	if !tool.CheckError(c.Bind(&userInfoParam), "修改用户信息数据有误"){
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "修改信息失败"})
+		return
 	}
-	if tool.ChangeUserInfo(userInfoParam.Id, userInfoParam.Username, userInfoParam.OPassword, userInfoParam.NPassword) >= 1{
+	err, result := tool.ChangeUserInfo(userInfoParam.Id, userInfoParam.Username, userInfoParam.OPassword, userInfoParam.NPassword)
+	if !err {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "修改信息失败"})
+		return
+	}
+	if result >= 1{
 		c.SetCookie("Username", userInfoParam.Username, 86400, "/", "127.0.0.1", false, false)
 		c.JSON(http.StatusOK, nil)
 	}else{
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "修改信息失败，可能是旧密码输入错误"})
+		return
 	}
 }

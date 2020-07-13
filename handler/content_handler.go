@@ -16,7 +16,12 @@ func AllContentHandler(c *gin.Context){
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "获取AllContent错误"})
 		return
 	}
-	c.JSON(http.StatusOK, tool.AllContent(info.TitleId, info.UserId))
+	err, results := tool.AllContent(info.TitleId, info.UserId)
+	if !err{
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "获取AllContent错误"})
+		return
+	}
+	c.JSON(http.StatusOK, results)
 }
 
 func GetContentHandler(c *gin.Context){
@@ -27,8 +32,17 @@ func GetContentHandler(c *gin.Context){
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "获取文章错误"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"content": tool.GetContentById(content.ContentId),
-							"comments": tool.AllCommentByCId(content.ContentId)})
+	err, comments := tool.AllCommentByCId(content.ContentId)
+	if !err{
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "获取文章评论错误"})
+		return
+	}
+	err, contents := tool.GetContentById(content.ContentId)
+	if !err{
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "获取文章评论错误"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"content": contents, "comments": comments})
 }
 
 func EditContentHandler(c *gin.Context){
@@ -41,7 +55,12 @@ func EditContentHandler(c *gin.Context){
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "更新文章错误"})
 		return
 	}
-	c.JSON(http.StatusOK, tool.EditContentById(content.ContentId, content.Value, content.Head))
+	err, result := tool.EditContentById(content.ContentId, content.Value, content.Head)
+	if !err{
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "更新文章错误"})
+		return
+	}
+	c.JSON(http.StatusOK, result)
 }
 
 func DelContentHandler(c *gin.Context){
@@ -90,5 +109,5 @@ func UploadContentPicHandler(c *gin.Context){
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "上传图片失败"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"pic": "http://127.0.0.1:8001/resource/" + pic})
+	c.JSON(http.StatusOK, gin.H{"pic": "http://120.77.153.248:8001/resource/" + pic})
 }

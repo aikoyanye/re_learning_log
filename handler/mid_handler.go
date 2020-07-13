@@ -37,7 +37,7 @@ func CheckLoginStatus() gin.HandlerFunc {
 func Cors() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		method := c.Request.Method
-		c.Header("Access-Control-Allow-Origin", "http://127.0.0.1:8888")
+		c.Header("Access-Control-Allow-Origin", "http://120.77.153.248:8888")
 		c.Header("Access-Control-Allow-Headers", "X-Requested-With, Content-Type")
 		c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, PATCH, DELETE")
 		c.Header("Access-Control-Expose-Headers", "Content-Length, Access-Control-Allow-Origin, Access-Control-Allow-Headers, Content-Type")
@@ -52,7 +52,9 @@ func Cors() gin.HandlerFunc {
 // 收集访问IP
 func ColReIp() gin.HandlerFunc{
 	return func(c *gin.Context) {
-		tool.AddReIp(c.ClientIP())
+		if !tool.AddReIp(c.ClientIP()){
+
+		}
 		c.Next()
 	}
 }

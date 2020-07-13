@@ -14,6 +14,12 @@ func AddCommentHandler(c *gin.Context){
 	}
 	if !tool.CheckError(c.Bind(&info), "更新comment错误"){
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "添加评论错误"})
+		return
 	}
-	c.JSON(http.StatusOK, tool.AddComment(info.Email, info.Comment, info.ContentId))
+	err, result := tool.AddComment(info.Email, info.Comment, info.ContentId)
+	if !err{
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "添加评论错误"})
+		return
+	}
+	c.JSON(http.StatusOK, result)
 }

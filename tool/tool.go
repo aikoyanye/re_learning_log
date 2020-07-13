@@ -41,7 +41,7 @@ func Now_() string {
 }
 
 func SetBanIps(){
-	BanIps = AllBanIp()
+	_, BanIps = AllBanIp()
 }
 
 // 创建文件夹

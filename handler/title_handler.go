@@ -12,8 +12,14 @@ func AllTitleHandler(c *gin.Context){
 	}
 	if !tool.CheckError(c.Bind(&user), "获取title错误"){
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "获取title错误"})
+		return
 	}
-	c.JSON(http.StatusOK, tool.AllTitle(user.Id))
+	err, results := tool.AllTitle(user.Id)
+	if !err{
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "获取title错误"})
+		return
+	}
+	c.JSON(http.StatusOK, results)
 }
 
 func AllTitleWhenAddContentHandler(c *gin.Context){
@@ -22,8 +28,14 @@ func AllTitleWhenAddContentHandler(c *gin.Context){
 	}
 	if !tool.CheckError(c.Bind(&user), "获取title错误"){
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "获取title错误"})
+		return
 	}
-	c.JSON(http.StatusOK, tool.AllTitleWhenAddContent(user.UserId))
+	err, result := tool.AllTitleWhenAddContent(user.UserId)
+	if !err{
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "获取title错误"})
+		return
+	}
+	c.JSON(http.StatusOK, result)
 }
 
 func AddTitleHandler(c *gin.Context){
@@ -36,7 +48,10 @@ func AddTitleHandler(c *gin.Context){
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "添加title错误"})
 		return
 	}
-	tool.AddTitle(title.Title, title.Hidden, title.UserId)
+	if !tool.AddTitle(title.Title, title.Hidden, title.UserId){
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "添加title错误"})
+		return
+	}
 	c.JSON(http.StatusOK, nil)
 }
 
@@ -49,7 +64,10 @@ func EditTitleHandler(c *gin.Context){
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "编辑title错误"})
 		return
 	}
-	tool.EditTitle(title.TitleId, title.Title)
+	if !tool.EditTitle(title.TitleId, title.Title){
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "编辑title错误"})
+		return
+	}
 	c.JSON(http.StatusOK, nil)
 }
 
@@ -61,6 +79,9 @@ func DelTitleHandler(c *gin.Context){
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "删除title错误"})
 		return
 	}
-	tool.DelTitle(title.TitleId)
+	if !tool.DelTitle(title.TitleId){
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "删除title错误"})
+		return
+	}
 	c.JSON(http.StatusOK, nil)
 }

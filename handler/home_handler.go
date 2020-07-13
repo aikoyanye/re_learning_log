@@ -7,8 +7,16 @@ import (
 )
 
 func HomeHandler(c *gin.Context){
-	notice := tool.GetReleaseNotice()
-	ulist := tool.GetUpdateList()
+	err, notice := tool.GetReleaseNotice()
+	if !err{
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "添加通知错误"})
+		return
+	}
+	err, ulist := tool.GetUpdateList()
+	if !err{
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "添加通知错误"})
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{"Notice": notice, "UList": ulist})
 }
 
@@ -18,8 +26,12 @@ func AddNoticeHandler(c *gin.Context){
 	}
 	if !tool.CheckError(c.Bind(&notice), "添加通知错误"){
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "添加通知错误"})
+		return
 	}
-	tool.PostNotice(notice.Content)
+	if !tool.PostNotice(notice.Content){
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "添加通知错误"})
+		return
+	}
 	c.JSON(http.StatusOK, nil)
 }
 
@@ -30,9 +42,17 @@ func AddUListHandler(c *gin.Context){
 	}
 	if !tool.CheckError(c.Bind(&ulist), "添加更新公布错误"){
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "添加更新公布错误"})
+		return
 	}
-	tool.PostUList(ulist.Version, ulist.Content)
-	result := tool.GetUpdateList()
+	if !tool.PostUList(ulist.Version, ulist.Content){
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "添加更新公布错误"})
+		return
+	}
+	err, result := tool.GetUpdateList()
+	if !err{
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "添加更新公布错误"})
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{"ulist": result})
 }
 
@@ -57,7 +77,10 @@ func AddBanIpHandler(c *gin.Context){
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "添加ban ip错误"})
 		return
 	}
-	tool.AddBanIp(banIp.BanIp)
+	if !tool.AddBanIp(banIp.BanIp){
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "添加ban ip错误"})
+		return
+	}
 	c.JSON(http.StatusOK, nil)
 }
 
